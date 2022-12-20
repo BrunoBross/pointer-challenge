@@ -1,24 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { v4 as uuid } from "uuid";
+
+interface PointInterface {
+  id: string;
+  posX: number;
+  posY: number;
+}
 
 function App() {
+  const [points, setPoints] = useState<PointInterface[]>([]);
+
+  const handleAddPoint = (event: React.MouseEvent<HTMLDivElement>) => {
+    const newPoints: PointInterface[] = [
+      ...points,
+      {
+        id: uuid(),
+        posX: event.clientX,
+        posY: event.clientY,
+      },
+    ];
+    newPoints && setPoints(newPoints);
+  };
+  console.log(points);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app" onClick={handleAddPoint}>
+      <div className="buttons">
+        <button className="button">UNDO</button>
+        <button className="button">REDO</button>
+      </div>
+      {points.map((point) => {
+        return (
+          <span
+            className="point"
+            key={point.id}
+            style={{ left: point.posX - 10, top: point.posY - 10 }}
+          />
+        );
+      })}
     </div>
   );
 }
